@@ -1,0 +1,57 @@
+local v1 = require(game.ReplicatedStorage:WaitForChild("Framework"):WaitForChild("Library"));
+while not v1.Loaded do
+	game:GetService("RunService").Heartbeat:Wait();
+end;
+local v2 = Instance.new("ScreenGui");
+v2.Name = "Diamonds Animation";
+v2.Parent = v1.Player.Get("PlayerGui");
+local u1 = Random.new();
+function RainDiamonds(p1)
+	local u2 = os.clock();
+	coroutine.wrap(function()
+		while true do
+			if os.clock() - u2 <= p1 then
+
+			else
+				break;
+			end;
+			local v3 = v1.Assets.UI["Diamond Rain"].Diamond:Clone();
+			local v4 = u1:NextNumber(0, 1);
+			local v5 = u1:NextNumber(0.075, 0.175);
+			v3.Position = UDim2.new(v4, 0, -0.1, 0);
+			v3.Rotation = u1:NextInteger(-360, 360);
+			v3.Size = UDim2.new(v5, 0, v5, 0);
+			v3.Parent = v2;
+			v1.Functions.FastTween(v3, {
+				Position = UDim2.new(v4 + u1:NextNumber(-0.1, 0.1), 0, 1.1, 0),
+				Rotation = v3.Rotation + u1:NextInteger(-30, 30)
+			}, { u1:NextNumber(0.3, 1), "Linear" }).Completed:Connect(function()
+				v3:Destroy();
+			end);
+			v1.Functions.Wait(u1:NextNumber(0, 0.03));
+		end;
+	end)();
+end;
+function comma_value(amount)
+  local formatted = amount
+  while true do
+    formatted, k = string.gsub(formatted, "^(-?%d+)(%d%d%d)", '%1,%2')
+    if (k==0) then
+      break
+    end
+  end
+  return formatted
+end
+RainDiamonds(.5);
+local function doubleGems(Gems)
+    local NewGems = ""
+    local Gemsx = Gems:split(",", "")
+    for i, v in pairs(Gemsx) do
+       NewGems = NewGems..(v*2)
+    end
+
+    game.Players.LocalPlayer.PlayerGui.Main.Right.Diamonds.Amount.Text = comma_value(NewGems)
+    wait(1)
+    NewGems = "0"
+end
+doubleGems(game.Players.LocalPlayer.PlayerGui.Main.Right.Diamonds.Amount.Text)
